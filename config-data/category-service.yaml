@@ -32,7 +32,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,env,refresh,routes,gateway,metrics,httptrace,logfile,auditevents,threaddump,heapdump,prometheus,conditions"
+        include: "gateway,health,info,refresh,env,refresh,routes"
 
 
 logging:
