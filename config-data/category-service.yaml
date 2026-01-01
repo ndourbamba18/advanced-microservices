@@ -15,6 +15,26 @@ spring:
     hibernate:
       ddl-auto: update
 
+# Configuration du client Eureka pour l'enregistrement
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+
+
+# Exposition des points de contrôle pour Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,env,refresh,routes,gateway,metrics,httptrace,logfile,auditevents,threaddump,heapdump,prometheus,conditions"
+
+
 logging:
   pattern:
     console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: eureka-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 2000
+        max-attempts: 5
+      override-system-properties: false
