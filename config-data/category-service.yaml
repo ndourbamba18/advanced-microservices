@@ -1,8 +1,6 @@
 server:
   port: 8081
 spring:
-  application:
-    name: category-service
   h2:
     console:
       enabled: true
