@@ -1,0 +1,32 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ndourbamba18/advanced-microservices.git
+          default-label: config-server
+          # Dossier à l'intérieur du dépôt où se trouvent les fichiers de configurations
+          search-paths: config-data
+          clone-on-start: true
+
+  main:
+    web-application-type: servlet
+# Configuration d'Actuator pour exposer les points de contrôle
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,env"
+  endpoint:
+    health:
+      show-details: always
+# Configuration des logs pour voir ce qu'il se passe lors de la connexion Git
+logging:
+  level:
+    org.springframework.cloud.config.server: DEBUG
+    org.eclipse.jgit: INFO
+

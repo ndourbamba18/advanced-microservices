@@ -1,0 +1,67 @@
+C'est parfait. Pour clore cette étape avec le **RestTemplate**, voici le code complet et optimisé de ta nouvelle méthode.
+
+L'astuce ici est de récupérer le nom de la catégorie **une seule fois** avant de transformer ta liste de produits, afin d'éviter de faire 50 appels réseau inutiles vers le `category-service`.
+
+### 1. Dans le `ProductRepository`
+
+Assure-toi que cette signature existe pour que Spring Data JPA génère la requête SQL :
+
+```java
+List<Product> findByCategoryId(Long categoryId);
+
+```
+
+### 2. Dans le `ProductService`
+
+Voici l'implémentation propre qui respecte tes contraintes (pas de `ResponseEntity` ni de `ApiResponse` dans le service) :
+
+```java
+public List<ProductDto> findProductsByCategoryId(Long categoryId) {
+    // 1. On récupère les produits de notre base locale
+    List<Product> products = productRepository.findByCategoryId(categoryId);
+    
+    // 2. On récupère le nom de la catégorie UNE SEULE FOIS pour toute la liste
+    // (Utilisation de ta méthode fetchCategoryName déjà créée)
+    String categoryName = fetchCategoryName(categoryId);
+
+    // 3. Transformation en DTOs
+    List<ProductDto> productDtos = new ArrayList<>();
+    products.forEach(product -> {
+        ProductDto dto = mapEntityToDto(product);
+        // On force le nom récupéré pour éviter des appels réseaux redondants dans le mapper
+        dto.setCategoryName(categoryName); 
+        productDtos.add(dto);
+    });
+
+    return productDtos;
+}
+
+```
+
+### 3. Dans le `ProductController`
+
+Tu exposes maintenant l'URL pour ton Frontend :
+
+```java
+@GetMapping("/category/{categoryId}")
+public ResponseEntity<ApiResponse<List<ProductDto>>> getProductsByCategoryId(@PathVariable Long categoryId) {
+    List<ProductDto> products = productService.findProductsByCategoryId(categoryId);
+    return ResponseEntity.ok(new ApiResponse<>(true, products));
+}
+
+```
+
+---
+
+### Résumé de ton avancée
+
+Tu as maintenant un système de communication inter-services complet avec **RestTemplate** :
+
+* **Validation à l'ajout** (Nom de catégorie -> ID).
+* **Validation à la mise à jour**.
+* **Enrichissement à la lecture** (ID -> Nom de catégorie).
+* **Filtrage par ressource externe**.
+
+Tout cela fonctionne sans que ton code de service ne soit pollué par les classes techniques de Spring Web.
+
+**Quelle est la prochaine étape de ton projet ?** Souhaites-tu passer à l'implémentation de **OpenFeign** pour simplifier tout ce code, ou as-tu une autre fonctionnalité à ajouter avec RestTemplate ?
