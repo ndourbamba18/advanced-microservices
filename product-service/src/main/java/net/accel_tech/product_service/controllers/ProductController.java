@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;
@@ -23,7 +24,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts() {
         List<ProductDto> list = productService.findAllProducts();
         list = list.stream()
@@ -47,7 +48,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<ProductDto>> updateCategoryById(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<ApiResponse<ProductDto>> updateProductById(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
         ProductDto updatedProduct = productService.updateProduct(id, productDto);
         return ResponseEntity.ok(new ApiResponse<>(true, updatedProduct));
     }
@@ -58,6 +59,12 @@ public class ProductController {
         DeleteProductResponseDto response = new DeleteProductResponseDto();
         response.setId(deletedId);
         return ResponseEntity.ok(new ApiResponse<>(true, response));
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        List<ProductDto> products = productService.findProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(new ApiResponse<>(true, products));
     }
 
 }

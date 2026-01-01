@@ -30,6 +30,8 @@ public class ProductDto {
     private Integer quantity;
     @JsonProperty("categoryId")
     private Long categoryId;
+    @JsonProperty("categoryName")
+    private String categoryName;  // Pour afficher le nom au lieu de l'ID uniquement
     @JsonProperty("createdAt")
     private Date createdAt;
     @JsonProperty("updatedAt")

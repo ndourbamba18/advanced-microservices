@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service("categoryService")
@@ -65,6 +64,11 @@ public class CategoryService {
     public CategoryDto findCategoryById(Long id) {
         Category findingCategory = findById(id);
         return mapEntityToDto(findingCategory);
+    }
+
+    public CategoryDto findCategoryByName(String name) {
+        Category category = categoryRepository.findCategoryByName(name);
+        return mapEntityToDto(category);
     }
 
     public Category findById(Long id){

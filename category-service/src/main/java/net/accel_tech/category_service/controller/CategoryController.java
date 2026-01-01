@@ -48,6 +48,12 @@ public class CategoryController {
         return ResponseEntity.ok(new ApiResponse<>(true, categoryDto));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ApiResponse<CategoryDto>> getCategoryByName(@PathVariable String name) {
+        CategoryDto categoryDto = categoryService.findCategoryByName(name);
+        return ResponseEntity.ok(new ApiResponse<>(true, categoryDto));
+    }
+
     @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<CategoryDto>> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategory = categoryService.updateCategory(id, categoryDto);

@@ -2,13 +2,10 @@ package net.accel_tech.product_service.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -35,12 +32,10 @@ public class Product {
     private Integer quantity;
     private Long categoryId;
 
-    @CreationTimestamp
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
-    @UpdateTimestamp
     @LastModifiedDate
     @Column(name = "updated_at")
     private Date updatedAt;
