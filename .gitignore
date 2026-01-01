@@ -1,0 +1,68 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Logs ###
+*.log
+logs/
+
+### Environnement ###
+.env
+.env.example
+.env.local
+.env.*.local
+
+### Système d'exploitation ###
+.DS_Store
+Thumbs.db
+
+### Application ###
+*.war
+*.ear
+*.jar
+*.zip
+*.tar.gz
+*.rar
+docs/
+
+### Documentation générée ###
+
+/docs/
+/docs/**/*
+!/docs/.gitkeep  # Si vous voulez garder un fichier vide pour conserver le dossier
+
+### IDE temporaire ###
+*.swp
+*.swo
+*~
