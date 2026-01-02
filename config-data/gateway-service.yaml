@@ -25,16 +25,45 @@ spring:
           uri: lb://category-service
           predicates:
             - Path=/api/categories/**
-          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /categories
-          # filters:
-          #   - StripPrefix=1        
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: categoryServiceCB
+                fallbackUri: forward:/fallback/category-service    
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/api/products/**
-          # Optionnel : Ajoutez un filtre si votre microservice ne s'attend pas au préfixe /products
-          # filters:
-          #   - StripPrefix=1
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productServiceCB
+                fallbackUri: forward:/fallback/product-service
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      categoryServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 4
+        waitDurationInOpenState: 10000ms
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      productServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 4
+        waitDurationInOpenState: 10000ms
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+
+
+# Exposition des points de contrôle pour Actuator
 management:
   endpoints:
     web:
