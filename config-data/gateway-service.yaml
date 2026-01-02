@@ -16,7 +16,7 @@ spring:
       discovery:
         locator:
           enabled: true
-          lower-case-service-id: true 
+          lower-case-service-id: true
       routes:
         - id: category-service
           uri: lb://category-service
@@ -49,6 +49,7 @@ resilience4j:
         waitDurationInOpenState: 10000ms
         failureRateThreshold: 50
         eventConsumerBufferSize: 10
+        timeoutDuration: 5s # On laisse 5 secondes pour les opérations POST/PUT
       productServiceCB:
         registerHealthIndicator: true
         slidingWindowSize: 10
@@ -58,6 +59,7 @@ resilience4j:
         waitDurationInOpenState: 10000ms
         failureRateThreshold: 50
         eventConsumerBufferSize: 10
+        timeoutDuration: 5s # On laisse 5 secondes pour les opérations POST/PUT
 
 
 # Exposition des points de contrôle pour Actuator
