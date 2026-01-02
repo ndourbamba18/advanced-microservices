@@ -7,6 +7,7 @@ import net.accel_tech.category_service.entity.Category;
 import net.accel_tech.category_service.exception.BadRequestException;
 import net.accel_tech.category_service.exception.ResourceNotFoundException;
 import net.accel_tech.category_service.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    @Value("${server.port}")
+    private String port;
 
     public List<CategoryDto> findAllCategories() {
         List<CategoryDto>  categoryDtos = new ArrayList<>();
@@ -63,11 +67,13 @@ public class CategoryService {
 
     public CategoryDto findCategoryById(Long id) {
         Category findingCategory = findById(id);
+        log.info("Requête reçue sur l'instance tournant sur le port : {}", port);
         return mapEntityToDto(findingCategory);
     }
 
     public CategoryDto findCategoryByName(String name) {
         Category category = categoryRepository.findCategoryByName(name);
+        log.info("Requête reçue sur l'instance tournant sur le port : {}", port);
         return mapEntityToDto(category);
     }
 

@@ -7,6 +7,7 @@ import net.accel_tech.product_service.entities.Product;
 import net.accel_tech.product_service.exception.BadRequestException;
 import net.accel_tech.product_service.exception.ResourceNotFoundException;
 import net.accel_tech.product_service.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +24,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final RestTemplate restTemplate;
+    //private final String CATEGORY_URL = "http://category-service/api/categories/";
     private final String CATEGORY_URL = "http://CATEGORY-SERVICE/api/categories/";
+
+    @Value("${server.port}")
+    private String port;
 
 
     private String fetchCategoryName(Long categoryId) {
@@ -51,7 +56,7 @@ public class ProductService {
             // Pour chaque produit, on enrichit (Optionnel : voir note sur la performance)
             if (product.getCategoryId() != null) {
                 try {
-                    Map<String, Object> response = restTemplate.getForObject(CATEGORY_URL + product.getCategoryId(), Map.class);
+                    Map<String, Object> response = restTemplate.getForObject(CATEGORY_URL + "/" + product.getCategoryId(), Map.class);
 
                     if (response != null && (Boolean) response.get("success")) {
                         Map<String, Object> categoryData = (Map<String, Object>) response.get("data");
@@ -172,6 +177,7 @@ public class ProductService {
                     // On descend dans l'objet "data" du JSON pour prendre le "name"
                     Map<String, Object> categoryData = (Map<String, Object>) response.get("data");
                     dto.setCategoryName((String) categoryData.get("name"));
+                    log.info("Requête reçue sur l'instance tournant sur le port : {}", port);
                 }
             } catch (Exception e) {
                 log.error("Impossible de récupérer le nom de la catégorie : {}", e.getMessage());
