@@ -15,10 +15,7 @@ spring:
     gateway:
       discovery:
         locator:
-          # Permet de router automatiquement via /SERVICE-NAME/endpoint
-          enabled: true  
-          # Important : Eureka met souvent les noms en MAJUSCULES (ex: CATEGORY-SERVICE)
-          # Cette option permet d'appeler l'URL en minuscules
+          enabled: true
           lower-case-service-id: true 
       routes:
         - id: category-service
