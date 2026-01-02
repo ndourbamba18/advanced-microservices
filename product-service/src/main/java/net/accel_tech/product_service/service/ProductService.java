@@ -24,8 +24,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final RestTemplate restTemplate;
-    //private final String CATEGORY_URL = "http://category-service/api/categories/";
-    private final String CATEGORY_URL = "http://CATEGORY-SERVICE/api/categories/";
+    private final String CATEGORY_URL = "http://category-service/api/categories/";
 
     @Value("${server.port}")
     private String port;
