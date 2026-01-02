@@ -23,7 +23,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final RestTemplate restTemplate;
-    private final String CATEGORY_URL = "http://localhost:8081/api/categories/";
+    private final String CATEGORY_URL = "http://CATEGORY-SERVICE/api/categories/";
 
 
     private String fetchCategoryName(Long categoryId) {

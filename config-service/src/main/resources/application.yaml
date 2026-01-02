@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/ndourbamba18/advanced-microservices.git
-          default-label: eureka
+          default-label: multiple-instances
           # Dossier à l'intérieur du dépôt où se trouvent les fichiers de configurations
           search-paths: config-data
           clone-on-start: true
