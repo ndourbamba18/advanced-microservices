@@ -1,0 +1,85 @@
+server:
+  port: 8080
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+  instance:
+    hostname: eureka-service
+    prefer-ip-address: true
+
+spring:
+  application:
+    zipkin: http://zipkin:9411
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: category-service
+          uri: lb://category-service
+          predicates:
+            - Path=/api/categories/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: categoryServiceCB
+                fallbackUri: forward:/fallback/category-service    
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productServiceCB
+                fallbackUri: forward:/fallback/product-service
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      categoryServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 4
+        waitDurationInOpenState: 10000ms
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        timeoutDuration: 5s # On laisse 5 secondes pour les opérations POST/PUT
+      productServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 4
+        waitDurationInOpenState: 10000ms
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        timeoutDuration: 5s # On laisse 5 secondes pour les opérations POST/PUT
+
+
+# Exposition des points de contrôle pour Actuator
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # Indispensable pour voir quelque chose en test (100% des traces)
+  zipkin:
+    tracing:
+      endpoint: "http://zipkin:9411/api/v2/spans"
+  endpoints:
+    web:
+      exposure:
+        include: "gateway,health,info,refresh,env,refresh,routes"
+  
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
+
+

@@ -1,0 +1,27 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+   hostname: eureka-service
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 60000
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# Exposition des points de contrôle pour Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "eureka,health,info,refresh,env,gateway,routes"
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
+
+    

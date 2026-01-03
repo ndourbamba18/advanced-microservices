@@ -1,17 +1,83 @@
 version: '3.8'
+
 services:
+  # --- INFRASTRUCTURE ---
+  config-service:
+    image: ndourbamba18/config-service:latest
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - microservices-net
+
+  eureka-service:
+    image: ndourbamba18/eureka-service:latest
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+    depends_on:
+      - config-service
+    networks:
+      - microservices-net
+
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin
     ports:
       - "9411:9411"
     environment:
-      - STORAGE_TYPE=mem            # Stockage en mémoire (par défaut)
-      # - STORAGE_TYPE=elasticsearch  # Pour persister les traces
+      - STORAGE_TYPE=mem            
+      # - STORAGE_TYPE=elasticsearch 
       # - ES_HOSTS=http://elasticsearch:9200
     volumes:
-      - ./zipkin-data:/data         # Pour persister les données si nécessaire
-    restart: unless-stopped         # Redémarrage automatique
+      - ./zipkin-data:/data
+    restart: unless-stopped
+    networks:
+      - microservices-net
+
+  # --- MICROSERVICES ---
+  gateway-service:
+    image: ndourbamba18/gateway-service:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # Cette variable écrase automatiquement le 'uri' du bootstrap.yaml
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+    depends_on:
+      - config-service
+      - eureka-service
+    networks:
+      - microservices-net
+
+  product-service:
+    image: ndourbamba18/product-service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+    depends_on:
+      - config-service
+      - eureka-service
+    networks:
+      - microservices-net
+
+  category-service:
+    image: ndourbamba18/category-service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+    depends_on:
+      - config-service
+      - eureka-service
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
 
 
 
