@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem            # Stockage en mémoire (par défaut)
+      # - STORAGE_TYPE=elasticsearch  # Pour persister les traces
+      # - ES_HOSTS=http://elasticsearch:9200
+    volumes:
+      - ./zipkin-data:/data         # Pour persister les données si nécessaire
+    restart: unless-stopped         # Redémarrage automatique
+
+
+
