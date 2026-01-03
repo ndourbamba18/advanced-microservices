@@ -11,6 +11,8 @@ eureka:
     prefer-ip-address: true
 
 spring:
+  application:
+    zipkin: http://localhost:9411
   cloud:
     gateway:
       discovery:
@@ -64,13 +66,20 @@ resilience4j:
 
 # Exposition des points de contrôle pour Actuator
 management:
+  tracing:
+    sampling:
+      probability: 1.0 # Indispensable pour voir quelque chose en test (100% des traces)
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
   endpoints:
     web:
       exposure:
         include: "gateway,health,info,refresh,env,refresh,routes"
-
+  
 logging:
   pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
     console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - [${spring.application.name}] - %msg%n"
 
 
