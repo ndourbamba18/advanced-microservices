@@ -3,7 +3,7 @@ spring:
     name: category-service
   cloud:
     config:
-      enable: true
-      uri: http://localhost:8888
+      enabled: true
+      uri: http://config-service:8888
       fail-fast: true
 
