@@ -18,7 +18,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "eureka,health,info,refresh,env,gateway,routes"
+        include: "gateway,health,info,refresh,env,refresh,routes,health,prometheus"
 
 logging:
   pattern:

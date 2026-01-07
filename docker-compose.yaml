@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # --- INFRASTRUCTURE ---
   config-service:
-    image: ndourbamba18/config-service:latest
+    image: docker.io/ndourbamba18/config-service:latest
     ports:
       - "8888:8888"
     environment:
@@ -12,7 +12,7 @@ services:
       - microservices-net
 
   eureka-service:
-    image: ndourbamba18/eureka-service:latest
+    image: docker.io/ndourbamba18/eureka-service:latest
     ports:
       - "8761:8761"
     environment:
@@ -40,7 +40,7 @@ services:
 
   # --- MICROSERVICES ---
   gateway-service:
-    image: ndourbamba18/gateway-service:latest
+    image: docker.io/ndourbamba18/gateway-service:latest
     ports:
       - "8080:8080"
     environment:
@@ -54,7 +54,7 @@ services:
       - microservices-net
 
   product-service:
-    image: ndourbamba18/product-service:latest
+    image: docker.io/ndourbamba18/product-service:latest
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
@@ -65,7 +65,7 @@ services:
       - microservices-net
 
   category-service:
-    image: ndourbamba18/category-service:latest
+    image: docker.io/ndourbamba18/category-service:latest
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888

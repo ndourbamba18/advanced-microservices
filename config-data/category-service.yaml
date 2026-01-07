@@ -40,7 +40,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "gateway,health,info,refresh,env,refresh,routes"
+        include: "gateway,health,info,refresh,env,refresh,routes,health,prometheus"
  
 logging:
   pattern:

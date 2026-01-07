@@ -27,6 +27,8 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true
+    # Sur OpenShift, on utilise souvent l'ID du pod pour l'instanceId
+    #instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 
 
 # Exposition des points de contrôle pour Actuator
@@ -40,7 +42,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "gateway,health,info,refresh,env,refresh,routes"
+        include: "gateway,health,info,refresh,env,refresh,routes,health,prometheus"
  
 logging:
   pattern:
